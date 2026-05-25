@@ -266,7 +266,8 @@
       <div id="ask-screen">
         <div class="avatar-wrap">
           <!-- Swap the src below for your own cat/photo URL -->
-          <div class="avatar-placeholder">🐱</div>
+          <!-- <div class="avatar-placeholder">🐱</div> -->
+          <img src="image.jpg" alt="My photo" />
         </div>
 
         <h1>
@@ -276,14 +277,14 @@
         </h1>
 
         <div class="btn-row">
-          <button class="btn btn-yes" onclick="sayYes()">YES ✔</button>
+          <button class="btn btn-yes" onclick="sayYes()">TAK ✔</button>
           <button
             class="btn btn-no"
             id="noBtn"
             onmouseenter="escapeNo(event)"
             onclick="escapeNo(event)"
           >
-            no... 🐻
+            nie... 🐻
           </button>
         </div>
       </div>
@@ -291,10 +292,10 @@
       <!-- YES screen -->
       <div id="yes-screen">
         <div class="big-emoji">🥰</div>
-        <h2>Yayyy!!! 💕</h2>
-        <p>I knew you'd say yes~ 🌸</p>
+        <h2>Super!!! 💕</h2>
+        <p>Wiedziałem, że się zgodzisz~ 🌸</p>
         <p style="margin-top: 6px; font-size: 0.9rem; color: #c994b0">
-          Can't wait for our date! 🍓
+          Już nie mogę się doczekać! 🍓
         </p>
       </div>
     </div>
@@ -374,7 +375,7 @@
         moveButton();
 
         if (noPresses > 8) {
-          noBtn.textContent = "fine... YES 💖";
+          noBtn.textContent = "no dobra... TAK 💖";
           noBtn.style.background = "var(--pink)";
 
           setTimeout(sayYes, 600);
