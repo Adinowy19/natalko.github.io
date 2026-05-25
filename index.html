@@ -225,7 +225,7 @@
 
       <div class="btn-row">
         <button class="btn btn-yes" onclick="sayYes()">YES ✔</button>
-        <button class="btn btn-no" id="noBtn" onmouseover="escapeNo()" onclick="escapeNo()">no... 🐻</button>
+        <button class="btn btn-no" id="noBtn" onmouseenter="escapeNo()" onclick="escapeNo()">no... 🐻</button>
       </div>
     </div>
 
@@ -262,28 +262,58 @@
 
   /* ── No button escape ── */
   let noPresses = 0;
+  let escaped = false;
   const noBtn = document.getElementById('noBtn');
+
+  function teleportNoBtn() {
+    const w = noBtn.offsetWidth;
+    const h = noBtn.offsetHeight;
+    const margin = 20;
+    // pick a random spot that won't immediately be under the cursor
+    let rx, ry, attempts = 0;
+    do {
+      rx = margin + Math.random() * (window.innerWidth  - w - margin * 2);
+      ry = margin + Math.random() * (window.innerHeight - h - margin * 2);
+      attempts++;
+    } while (attempts < 10);
+    noBtn.style.position = 'fixed';
+    noBtn.style.left = rx + 'px';
+    noBtn.style.top  = ry + 'px';
+    noBtn.style.zIndex = 50;
+    noBtn.style.margin = '0';
+  }
 
   function escapeNo() {
     noPresses++;
-    if (noPresses > 6) {
-      // after many attempts, give up and redirect to YES
+    if (noPresses > 8) {
       noBtn.textContent = 'fine... YES 💖';
       noBtn.style.background = 'var(--pink)';
       setTimeout(sayYes, 600);
       return;
     }
-    const card = document.getElementById('main-card');
-    const cRect = card.getBoundingClientRect();
-    const maxX = window.innerWidth  - noBtn.offsetWidth;
-    const maxY = window.innerHeight - noBtn.offsetHeight;
-    const rx = Math.random() * maxX;
-    const ry = Math.random() * maxY;
-    noBtn.style.position = 'fixed';
-    noBtn.style.left = rx + 'px';
-    noBtn.style.top  = ry + 'px';
-    noBtn.style.zIndex = 50;
+    escaped = true;
+    teleportNoBtn();
   }
+
+  // Track mouse globally — if cursor gets within 60px of the button, run away
+  document.addEventListener('mousemove', (e) => {
+    if (!escaped) return;
+    if (noPresses > 8) return;
+    const r = noBtn.getBoundingClientRect();
+    const cx = r.left + r.width  / 2;
+    const cy = r.top  + r.height / 2;
+    const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
+    if (dist < 70) {
+      noPresses++;
+      if (noPresses > 8) {
+        noBtn.textContent = 'fine... YES 💖';
+        noBtn.style.background = 'var(--pink)';
+        setTimeout(sayYes, 600);
+        return;
+      }
+      teleportNoBtn();
+    }
+  });
 
   /* ── Say YES ── */
   function sayYes() {
